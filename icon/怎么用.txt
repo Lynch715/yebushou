@@ -1,0 +1,10 @@
+夜不收 图标
+
+网页端：index.html 已经挂好了 favicon、apple-touch-icon 和 manifest，不用动。
+
+iPhone：Safari 打开网址 → 底部「分享」→「添加到主屏幕」→「添加」。
+安卓 / 桌面 Chrome、Edge：进游戏 45 秒后会弹「装到桌面」；没弹就在设置里点「装到桌面」，或者地址栏右边的安装按钮。
+
+Mac 把 .icns 贴到一个 App 上（比如 Safari 的「添加到程序坞」做出来的那个）：
+1. 访达里选中那个 App，按 ⌘I 打开简介。
+2. 把 夜不收.icns 拖到简介窗口左上角的小图标上。
