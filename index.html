@@ -275,6 +275,61 @@ a { color: var(--lamp); }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
+/* ---------- 美术层 ---------- */
+.art { margin: 0; position: relative; overflow: hidden; background: var(--soot-2); }
+.art img { display: block; width: 100%; height: 100%; object-fit: cover; filter: brightness(calc(.3 + .7 * var(--glow))) saturate(.85); transition: filter 1.2s, opacity .9s; }
+/* 纸纹 + 暗角，不画进图里 */
+.art::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgba(14,12,10,.75) 100%),
+    repeating-linear-gradient(0deg, rgba(217,204,178,.025) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.035) 0 1px, transparent 1px 4px);
+  mix-blend-mode: normal;
+}
+.art.fade-in img { animation: artin 1.4s ease both; }
+@keyframes artin { from { opacity: 0; } to { opacity: 1; } }
+
+/* 场景图：手机在正文顶上，桌面在侧栏 */
+.scene-fig { aspect-ratio: 3 / 2; width: 100%; }
+.night .side .scene-side { border-bottom: 1px solid var(--line); }
+.night .side .scene-side .scene-fig { aspect-ratio: 3 / 2; }
+.story .scene-top { display: none; }
+
+/* 立绘：浮在该章右侧 */
+.chapter .portrait { float: right; width: 8.5rem; aspect-ratio: 2 / 3; margin: .2em 0 .8em 1.2em; border: 1px solid var(--line); }
+.chapter .portrait figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: .3em .5em; font-size: .72rem; letter-spacing: .15em; color: var(--paper-dim); background: linear-gradient(transparent, rgba(14,12,10,.9)); font-family: var(--kai); z-index: 1; }
+.chapter .portrait::after { z-index: 0; }
+/* 鬼物：通栏，压得更暗 */
+.chapter .moment { aspect-ratio: 3 / 2; margin: 1.2em 0 1.4em; border: 1px solid rgba(163,56,42,.35); }
+.chapter .moment img { filter: brightness(calc(.25 + .6 * var(--glow))) saturate(.7) contrast(1.05); }
+.chapter::after { content: ""; display: block; clear: both; }
+
+/* 头像 */
+.avatar { width: 1.6em; height: 1.6em; border-radius: 50%; object-fit: cover; flex: none; border: 1px solid var(--line); filter: saturate(.85); vertical-align: middle; }
+.people .person { display: flex; align-items: center; gap: .6em; font-size: .86rem; line-height: 1.6; padding: .35em 0; color: var(--paper); }
+.people .person small { color: var(--paper-faint); font-size: .76rem; }
+.me-head { display: flex; align-items: center; gap: .9em; margin-bottom: .8em; }
+.me-head .avatar { width: 3.2em; height: 3.2em; }
+.create .me-head .avatar { width: 4.2em; height: 4.2em; }
+
+/* 封面 */
+.title-screen .cover { grid-column: 2; max-height: 70vh; width: auto; aspect-ratio: 2 / 3; margin: 0 auto; border: 0; background: transparent; }
+.title-screen .cover img { filter: none; }
+.title-screen .cover::after { background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 60%, var(--soot) 100%); }
+.title-screen .cover[hidden] { display: none; }
+
+@media (max-width: 820px) {
+  .story .scene-top { display: block; position: sticky; top: 0; z-index: 2; margin: 0 -1.1rem 1.2rem; width: auto; transition: height .35s, opacity .35s; height: calc((100vw) * 2 / 3); max-height: 46vh; aspect-ratio: auto; }
+  .story.scrolled .scene-top { height: 3.2rem; opacity: .55; }
+  .story .scene-top::after { background: linear-gradient(transparent 55%, var(--soot) 100%), radial-gradient(ellipse 90% 80% at 50% 45%, transparent 55%, rgba(14,12,10,.6) 100%); }
+  .night .side .scene-side { display: none; }
+  .chapter .portrait { width: 6.5rem; }
+  .title-screen .cover { max-height: 52vh; }
+}
+.title-screen:has(.cover:not([hidden])) .vert { display: none; }
+.story .scene-top { margin: 0; }
+
 /* ---------- 装到桌面 ---------- */
 .install-offer {
   position: fixed; left: 50%; bottom: calc(1rem + env(safe-area-inset-bottom)); transform: translateX(-50%);
@@ -2198,7 +2253,8 @@ const Turn = {
 
   commit(W, R, nar, ending) {
     const run = W.run;
-    run.chapters.push({ turn: run.turn, input: R.input, text: nar.text, clock: R.timeTo, dmg: R.dmg, clues: R.clues.slice() });
+    const art = (typeof ART !== 'undefined') ? ART.forChapter(W, ending) : null;
+    run.chapters.push({ turn: run.turn, input: R.input, text: nar.text, clock: R.timeTo, dmg: R.dmg, clues: R.clues.slice(), art });
     if (ending) {
       run.options = [];
       this.settle(W, ending);
@@ -2361,6 +2417,7 @@ const UI = {
     const has = !!(sv && !sv.over);
     $('#app').innerHTML = `
       <div class="title-screen">
+        ${ART.fig(ART.url('transition/cover'), 'cover', '夜不收')}
         <h1 class="vert">夜不收<small>中式恐怖无限流　第一季</small></h1>
         <div class="title-menu">
           ${has ? '<button class="btn primary" data-a="continue">接着来</button>' : ''}
@@ -2388,7 +2445,7 @@ const UI = {
           <h2>你是谁</h2>
           <p class="lede">一个普通人。哪天夜里，你会被丢进一个不是你的地方。下面是抽出来的，不满意就重抽。</p>
           <div class="who-card">
-            <div class="who-line"><b>${ch.age}</b> 岁，<b>${ch.gender}</b>，${esc(ch.job)}。</div>
+            <div class="me-head">${ART.me(ch) ? `<img class="avatar" src="${ART.me(ch)}" alt="" onerror="this.hidden=true">` : ''}<div class="who-line"><b>${ch.age}</b> 岁，<b>${ch.gender}</b>，${esc(ch.job)}。</div></div>
             <div class="who-skills">${sk}</div>
             <div class="attr-row">
               ${Object.entries(ATTRS).map(([k, n]) => `<div class="attr"><span class="n">${ch.attrs[k]}</span><span class="k">${n}</span></div>`).join('')}
@@ -2399,7 +2456,7 @@ const UI = {
             <button class="btn" data-a="reattr">只重抽四项</button>
             <button class="btn" data-a="rejob">只重抽身份</button>
           </div>
-          <label class="field">别人怎么叫你（可以不填，正文里一律是"你"）
+          <label class="field">别人怎么叫你（可以不填）
             <input id="call" maxlength="8" value="${esc(ch.call || '')}" placeholder="比如：小陈、老周">
           </label>
           <div class="field">死了以后
@@ -2455,7 +2512,8 @@ const UI = {
     const head = `<div class="case-head"><span class="seal">${C.title.slice(0, 2)}<br>${C.title.slice(2, 4)}</span><div><div class="t">${C.title}</div><div class="meta">第${['一', '二', '三'][G.nightIdx]}夜，${'一二三'[C.star - 1]}星</div></div></div>
       <div class="brief">你的身份：<b>${C.role}</b><br>要做的事：<b>${C.task}</b></div>`;
     const chs = run.chapters.map((c, i) => `<section class="chapter ${fresh && i === run.chapters.length - 1 ? 'fresh' : ''}" id="ch${i}">
-        ${c.input ? `<div class="you-said">${esc(c.input)}</div>` : ''}${paras(c.text)}</section>`).join('');
+        ${c.input ? `<div class="you-said">${esc(c.input)}</div>` : ''}${c.art && c.art.portrait ? `<figure class="art portrait ${fresh && i === run.chapters.length - 1 ? 'fade-in' : ''}"><img src="${ART.url(c.art.portrait.file)}" alt="${esc(c.art.portrait.name)}" loading="eager" decoding="async" onerror="this.closest('figure').hidden=true"><figcaption>${esc(c.art.portrait.name)}</figcaption></figure>` : ''}${paras(c.text)}${c.art && c.art.moment ? ART.fig(ART.url(c.art.moment), 'moment' + (fresh && i === run.chapters.length - 1 ? ' fade-in' : '')) : ''}</section>`).join('');
+    UI.renderScene();
     $('.story-inner').innerHTML = head + chs + `<div class="fail-slot"></div><div class="busy"><span class="dot"></span><span class="busy-t"></span></div>`;
 
     // 选项
@@ -2481,6 +2539,7 @@ const UI = {
           <div class="dial-wrap"></div>
           <div class="lampbar"></div>
           <div class="attrs-mini"></div>
+          <div class="scene-side"></div>
           <div class="tabs" role="tablist">
             <button role="tab" data-tab="clues">线索</button>
             <button role="tab" data-tab="bag">行囊</button>
@@ -2493,7 +2552,7 @@ const UI = {
           </div>
           <div class="side-foot"><button class="btn small" data-a="settings">设置</button><button class="btn small" data-a="home">封面</button></div>
         </aside>
-        <main class="story" aria-live="polite"><div class="story-inner"></div></main>
+        <main class="story" aria-live="polite"><div class="scene-top-wrap"></div><div class="story-inner"></div></main>
         <footer class="act"><div class="act-inner">
           <div class="opts"></div>
           <form class="say-form"><textarea rows="1" placeholder="你想做什么，或者说什么……" aria-label="你的行动"></textarea><button class="btn primary" type="submit">落笔</button></form>
@@ -2540,6 +2599,19 @@ const UI = {
       if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && window.matchMedia('(min-width: 821px)').matches) { e.preventDefault(); form.requestSubmit(); }
     });
     ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 160) + 'px'; });
+    const story = $('.story');
+    story.addEventListener('scroll', () => story.classList.toggle('scrolled', story.scrollTop > 40), { passive: true });
+  },
+
+  /* 场景图：地点变了才换，换的时候淡入 */
+  renderScene() {
+    const src = ART.scene(App.G);
+    for (const slot of [$('.scene-side'), $('.scene-top-wrap')]) {
+      if (!slot) continue;
+      if (slot.dataset.src === src) continue;
+      slot.dataset.src = src;
+      slot.innerHTML = src ? ART.fig(src, (slot.classList.contains('scene-side') ? 'scene-fig' : 'scene-fig scene-top') + ' fade-in') : '';
+    }
   },
 
   setMobileTab(t) {
@@ -2559,7 +2631,12 @@ const UI = {
     const seen = ids.filter(id => C.clues[id].kind === 'seen');
     const heard = ids.filter(id => C.clues[id].kind === 'heard');
     const item = id => `<div class="clue ${C.clues[id].kind} ${run.clues[id].turn === run.turn ? 'new' : ''}">${esc(C.clues[id].text)}</div>`;
+    const people = Object.keys(C.npcs).filter(id => Engine.npcPresent(G, id)).map(id => {
+      const n = C.npcs[id], av = ART.npcAvatar(run.caseId, id);
+      return `<div class="person">${av ? `<img class="avatar" src="${av}" alt="" onerror="this.hidden=true">` : ''}<div>${esc(n.name)}${n.stateText ? `<br><small>${esc(n.stateText(run.s, run))}</small>` : ''}</div></div>`;
+    }).join('');
     $('[data-pane=clues]').innerHTML = `
+      ${people ? `<h4>跟前的人</h4><div class="people">${people}</div>` : ''}
       <h4>看到的</h4>${seen.map(item).join('') || '<div class="empty">还什么都没看到。</div>'}
       <h4>听人说的</h4>${heard.map(item).join('') || '<div class="empty">还没人跟你说什么。</div>'}
       <h4>你的猜测</h4><textarea class="notes" placeholder="自己记。这里写的不算数，只是给你自己看。">${esc(run.notes || '')}</textarea>`;
@@ -2571,7 +2648,8 @@ const UI = {
     const rope = P.rope > 0 ? `<div class="bag-item"><div>朱砂红绳（系着）<small>还能挡 ${P.rope} 回</small></div></div>` : '';
     $('[data-pane=bag]').innerHTML = `<h4>手里的</h4>${held || '<div class="empty">空着手。</div>'}<h4>兜里的</h4>${shop + rope || '<div class="empty">兜里什么都没有。</div>'}<h4>积分</h4><div class="empty">${P.points}</div>`;
     // 你
-    $('[data-pane=me]').innerHTML = `<div class="who-line" style="font-size:1rem">${P.age} 岁，${P.gender}，${esc(P.job)}。${P.call ? '<br><span class="muted">别人叫你：' + esc(P.call) + '</span>' : ''}</div>
+    const meAv = ART.me(P);
+    $('[data-pane=me]').innerHTML = `<div class="me-head">${meAv ? `<img class="avatar" src="${meAv}" alt="" onerror="this.hidden=true">` : ''}<div class="who-line" style="font-size:1rem">${P.age} 岁，${P.gender}，${esc(P.job)}。${P.call ? '<br><span class="muted">别人叫你：' + esc(P.call) + '</span>' : ''}</div></div>
       <h4>本事</h4>${P.skills.map(k => `<div class="clue">${SKILLS[k].name}：${SKILLS[k].desc}</div>`).join('')}
       <h4>四项</h4><div class="attrs-mini" style="padding:0;border:0">${Object.entries(ATTRS).map(([k, n]) => `<div><b>${P.attrs[k]}</b>${n}</div>`).join('')}</div>
       <h4>这一局</h4><div class="empty">${G.mode === 'hard' ? '硬核：死了就结束。' : '普通：死了可以从这一夜开头重来。'}</div>`;
@@ -2750,6 +2828,88 @@ const UI = {
   },
 };
 
+/* ---- 70-art.js ---- */
+'use strict';
+
+/* 美术层：场景图、立绘、头像、鬼物。没图就什么都不显示（静默回落）。规范见 docs/美术规范_v0.md。 */
+const ART = {
+  base: 'art/',
+  IDENT: { 高中生: 'highschool', 大学生: 'college', 技校学生: 'vocational', 上班: 'worker', 没工作: 'unemployed', 退休: 'retired' },
+
+  /* 每个手写案件一份映射。只写文件名，不写剧透。 */
+  cases: {
+    c01: {
+      scene(s, loc) {
+        if (loc === 'hall') return s.lampLit ? 'scene/c01-hall-lit' : 'scene/c01-hall-dark';
+        if (loc === 'yard') return 'scene/c01-courtyard';
+        if (loc === 'side') return 'scene/c01-side-room';
+        if (loc === 'lane') return 'scene/c01-alley';
+        return null;
+      },
+      npc: { mother: 'c01-mother', son: 'c01-yian' },
+      endingPortrait: 'son',
+      /* 必须看见的那一刻才出，出一次 */
+      moments(s, run, shown) {
+        if (s.coffinOpen && !shown.coffin) return { key: 'coffin', file: 'ghost/c01-coffin' };
+        if (s.wetIn && !s.nameFixed && !shown.footprints) return { key: 'footprints', file: 'ghost/c01-footprints' };
+        return null;
+      },
+    },
+  },
+
+  url(file) { return file ? `${this.base}${file}.webp` : ''; },
+
+  me(P) {
+    const slug = this.IDENT[P.ident];
+    if (!slug) return '';
+    return this.url(`me/${slug}-${P.gender === '女' ? 'f' : 'm'}`);
+  },
+
+  scene(G) {
+    const run = G && G.run; if (!run) return '';
+    const m = this.cases[run.caseId]; if (!m || !m.scene) return '';
+    return this.url(m.scene(run.s, run.loc));
+  },
+
+  npcPortrait(caseId, id) { const m = this.cases[caseId]; return m && m.npc && m.npc[id] ? this.url('npc/' + m.npc[id]) : ''; },
+  npcAvatar(caseId, id) { const m = this.cases[caseId]; return m && m.npc && m.npc[id] ? this.url('npc-avatar/' + m.npc[id]) : ''; },
+
+  /* 回合结算后算这一章要配什么图。写进 chapter.art，历史回看时还在。 */
+  forChapter(W, ending) {
+    const run = W.run, C = Engine.caseOf(W), m = this.cases[run.caseId];
+    if (!m) return null;
+    const shown = run.s.__artShown || (run.s.__artShown = {});
+    const art = {};
+    const pick = id => {
+      if (!m.npc || !m.npc[id] || shown['npc:' + id]) return;
+      shown['npc:' + id] = true;
+      art.portrait = { id, name: C.npcs[id].name, file: 'npc/' + m.npc[id] };
+    };
+    for (const id of Object.keys(C.npcs)) if (!art.portrait && Engine.npcPresent(W, id)) pick(id);
+    if (ending && !ending.dead && m.endingPortrait) pick(m.endingPortrait);
+    if (!ending && m.moments) {
+      const mo = m.moments(run.s, run, shown);
+      if (mo) { shown[mo.key] = true; art.moment = mo.file; }
+    }
+    return Object.keys(art).length ? art : null;
+  },
+
+  /* 图没加载出来就把整个 figure 收掉 */
+  fig(src, cls, alt = '') {
+    if (!src) return '';
+    return `<figure class="art ${cls}"><img src="${src}" alt="${esc(alt)}" loading="lazy" decoding="async" onerror="this.closest('figure').hidden=true"></figure>`;
+  },
+
+  preload(G) {
+    const m = G && G.run && this.cases[G.run.caseId];
+    if (!m) return;
+    const files = new Set();
+    for (const loc of ['hall', 'yard', 'side', 'lane', 'dian', 'houwu']) { const f = m.scene({ lampLit: true }, loc); if (f) files.add(f); }
+    for (const id of Object.values(m.npc || {})) { files.add('npc/' + id); files.add('npc-avatar/' + id); }
+    for (const f of files) { const im = new Image(); im.src = this.url(f); }
+  },
+};
+
 /* ---- 90-main.js ---- */
 'use strict';
 
@@ -2770,16 +2930,20 @@ const App = {
     UI.lastHp = G.player.hp;
     $('#app').innerHTML = '';
     UI.renderNight(false);
+    ART.preload(G);
   },
 
   async homecoming(ending) {
     const G = App.G;
     if (App.cfg.offline || !App.cfg.key) return ending.echo ? `那天早上我醒得很早。刷牙的时候，我盯着镜子看了很久，镜子里那个人也看着我，看得比我久一点。` : '';
-    try {
-      const r = await LLM.chat(Prompts.homecoming(G, ending), { json: false, temperature: 0.9, maxTokens: 800, tag: 'home' });
-      const t = typeof r === 'string' ? r : (r && r.text) || '';
-      return t.trim().replace(/^["“「]|["”」]$/g, '');
-    } catch (e) { return ''; }
+    for (let i = 0; i < 3; i++) {
+      try {
+        const r = await LLM.chat(Prompts.homecoming(G, ending), { json: false, temperature: 0.9, maxTokens: 800, tag: 'home' });
+        const t = (typeof r === 'string' ? r : (r && r.text) || '').trim().replace(/^["“「]|["”」]$/g, '');
+        if (t.length >= 30) return t;
+      } catch (e) { /* 再来 */ }
+    }
+    return '';
   },
 };
 

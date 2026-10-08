@@ -1,0 +1,194 @@
+[
+  {
+    "path": "ghost/c01-coffin.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 109408,
+    "quality": 76,
+    "sha256": "ebb63a95708961a7aef1f596bd4e2d93845e6f8d581fdc1caf5ac4e51dc6b917"
+  },
+  {
+    "path": "ghost/c01-footprints.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 116660,
+    "quality": 46,
+    "sha256": "9e295fdc2748f8dcd39ffee350ab7f0f32bb55cef11696bca2035ce802d8a414"
+  },
+  {
+    "path": "me/college-f.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9350,
+    "quality": 78,
+    "sha256": "37949ed01de46bf8b1a33cac7be857ce91cfe30a3af2b31465910aaa3427a5f3"
+  },
+  {
+    "path": "me/college-m.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9832,
+    "quality": 86,
+    "sha256": "3d6da17a07e2e80184492f45efdc36f9e50905eb4f5791adb5d226446bf3c6c5"
+  },
+  {
+    "path": "me/highschool-f.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9526,
+    "quality": 82,
+    "sha256": "e691500c318801c934812ff0670d9d8ff20fc469d2dd3b57fb2728d04852962e"
+  },
+  {
+    "path": "me/highschool-m.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9514,
+    "quality": 84,
+    "sha256": "b0fe99edf886cf36f02bbdc4ed969f037743094f87fe3a8ad3c2c040791abd20"
+  },
+  {
+    "path": "me/retired-f.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9444,
+    "quality": 76,
+    "sha256": "0c3589a8a7652e356e482c1e253554a5feea7790cc23288583f0a7f96553d504"
+  },
+  {
+    "path": "me/retired-m.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9726,
+    "quality": 76,
+    "sha256": "340b3d0e6649379651edeaf034ba8f3043af52c02880aea4806317e5b23e0e44"
+  },
+  {
+    "path": "me/unemployed-f.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9650,
+    "quality": 82,
+    "sha256": "cfe5fd2518c5573a831a2e57492a98087ce618c04b056b500abc74c4ddc68a14"
+  },
+  {
+    "path": "me/unemployed-m.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9556,
+    "quality": 80,
+    "sha256": "3b5b7dc42ddca1a53488a9f3eb84a347c3ade360a67e202eb811fbc8e0625f21"
+  },
+  {
+    "path": "me/vocational-f.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9842,
+    "quality": 82,
+    "sha256": "980513cb757f3e26d6bd97b2e62b628d1e0c1f7572c3729caa8589f0d04a07b8"
+  },
+  {
+    "path": "me/vocational-m.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9806,
+    "quality": 88,
+    "sha256": "fdec70b11f2cf4a6d75c93ced4ae6f967c1a48d992b75506325e6db7408f27cc"
+  },
+  {
+    "path": "me/worker-f.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 10000,
+    "quality": 84,
+    "sha256": "cda98bf67b612da50bb2473b541d72a50c1701dbe121ed67c436e1cd39a45925"
+  },
+  {
+    "path": "me/worker-m.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9482,
+    "quality": 84,
+    "sha256": "82b15b456b172032bd269fa4b4bcf065ab77bbb94598d3c37e2c747e59e81130"
+  },
+  {
+    "path": "npc/c01-mother.webp",
+    "width": 1024,
+    "height": 1536,
+    "bytes": 79270,
+    "quality": 48,
+    "sha256": "2a18f8036dfc89f97a014830b5f8e81154a3049bc60a23b4ff2708bdc121a150"
+  },
+  {
+    "path": "npc/c01-yian.webp",
+    "width": 1024,
+    "height": 1536,
+    "bytes": 79322,
+    "quality": 36,
+    "sha256": "6bf3eb90386a54ea32c0dc8bdd0ca72103a2b99d50c13005f4b33eadbbcf5e62"
+  },
+  {
+    "path": "scene/c01-alley.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 116858,
+    "quality": 42,
+    "sha256": "ba9a68fe7ab5437b1e58eb7a68ee9b5d535b106aa15c6e8bbe5b03a9a49820b3"
+  },
+  {
+    "path": "scene/c01-courtyard.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 117504,
+    "quality": 42,
+    "sha256": "4391b1f47dff746436177089d0f1be7ccab82017a62c4b60c064bea5b9cfb643"
+  },
+  {
+    "path": "scene/c01-hall-dark.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 107984,
+    "quality": 84,
+    "sha256": "72843eb693c76e76a37e2aa47a8a5ed20cd43a89ed9ec7b7312cb6e5adba7fd7"
+  },
+  {
+    "path": "scene/c01-hall-lit.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 116630,
+    "quality": 76,
+    "sha256": "ca334677d8a1344d466809302f0708415dec67e29ab14ed926a3410a7c567ad0"
+  },
+  {
+    "path": "scene/c01-side-room.webp",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 117548,
+    "quality": 72,
+    "sha256": "1808d73f9bad47b54eb42470dafbdcaf3341d7066861c90ac546355474f389df"
+  },
+  {
+    "path": "transition/cover.webp",
+    "width": 1024,
+    "height": 1536,
+    "bytes": 89768,
+    "quality": 88,
+    "sha256": "7bd4c1e5313b75d7cdbc60d9f9da7a4d46fc473d3c8a1059449270509f7eefc7"
+  },
+  {
+    "path": "npc-avatar/c01-mother.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 9268,
+    "quality": 78,
+    "sha256": "180a14e45bc161a26b8196903aaee665a9a0dedfb783b7d3998c19823109c4b2"
+  },
+  {
+    "path": "npc-avatar/c01-yian.webp",
+    "width": 256,
+    "height": 256,
+    "bytes": 8944,
+    "quality": 82,
+    "sha256": "6a4d2af082a15fdd06122abbd5ddce16e1afbcccfb0b0811eb363fb459dc0532"
+  }
+]
